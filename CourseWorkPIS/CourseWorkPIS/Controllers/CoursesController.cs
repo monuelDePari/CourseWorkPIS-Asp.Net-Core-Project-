@@ -20,9 +20,15 @@ namespace CourseWorkPIS.Controllers
         }
 
         // GET: Courses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Course.ToListAsync());
+            var coursesTitles = from course in _context.Course
+                                select course;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                coursesTitles = coursesTitles.Where(s => s.Title.Contains(searchString));
+            }
+            return View(await coursesTitles.ToListAsync());
         }
 
         // GET: Courses/Details/5
